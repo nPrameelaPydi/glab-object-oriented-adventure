@@ -12,9 +12,24 @@ const adventurer = {
 }
 
 //create a loop that logs each item in Robin’s inventory.
-for (const key in adventurer) {
-    if (adventurer.hasOwnProperty(key)) {
-        console.log(`${key}: ${adventurer[key]}`);
-    }
+//for (const key in adventurer) {
+//    if (adventurer[key] == `inventory`) {
+//        for (let i = 0; i < inventory.length; i++) {
+//            console.log(adventurer[key][i]);
+//        }
+//    }
+//}
+for (let i = 0; i < adventurer.inventory.length; i++) {
+    console.log(adventurer.inventory[i]);
 }
+
+//const adventurer = {
+//    name: "Robin",
+//    health: 10,
+//    inventory: ["sword", "potion", "artifact"],
+//    companion: {
+//        name: "Leo",
+//        type: "Cat"
+//    }
+//}
 
