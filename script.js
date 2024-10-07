@@ -69,7 +69,7 @@ class Character {
 
     roll(mod = 0) {
         const result = Math.floor(Math.random() * 20) + 1 + mod;
-        console.log(`${this.name} rolled a ${result}.`);
+        //console.log(`${this.name} rolled a ${result}.`);
         return result;
     }
 }
@@ -111,6 +111,36 @@ class Adventurer extends Character {
         return new Adventurer(name, randomRole);
     }
 
+    duel(adventurerObj) {
+        console.log(`${this.name} is dueling with ${adventurerObj.name}`);
+
+        while (this.health > 50 && adventurerObj.health > 50) {
+            const myRoll = this.roll();
+            const opponentRoll = adventurerObj.roll();
+
+            //console.log(`${this.name} rolled: ${myRoll}`);
+            //console.log(`${adventurerObj.name} rolled: ${opponentRoll}`);
+
+            if (myRoll > opponentRoll) {
+                adventurerObj.health -= 1;
+            } else if (myRoll < opponentRoll) {
+                this.health -= 1;
+            } else {
+                console.log(`Its a tie. No health lost!!`);
+            }
+
+            //console.log(`Current health - ${this.name}: ${this.health}, ${adventurerObj.name}: ${adventurerObj.health}`);
+        }
+
+        if (this.health > 50) {
+            console.log(`Current health - ${this.name}: ${this.health}, ${adventurerObj.name}: ${adventurerObj.health}`);
+            console.log(`${this.name} wins the duel!!`);
+        } else {
+            console.log(`Current health - ${this.name}: ${this.health}, ${adventurerObj.name}: ${adventurerObj.health}`);
+            console.log(`${adventurerObj.name} wins the duel!!`);
+        }
+
+    }
 
     scout() {
         console.log(`${this.name} is scouting ahead...`);
@@ -129,6 +159,12 @@ class Adventurer extends Character {
         }
     }
 }
+const hero1 = new Adventurer('robin', 'Fighter');
+const hero2 = new Adventurer('Lia', "Healer");
+hero1.duel(hero2);
+
+
+
 
 class Companion extends Character {
     constructor(name, type) {
@@ -171,16 +207,41 @@ leo.companion = frank;
 //console.log(robin1);
 //console.log(leo);
 //console.log(frank);
-console.log(Character.MAX_HEALTH);
-const randomChar = Character.createRandomHealth("Alice");
-console.log(randomChar.health);
-try {
-    new Adventurer("Bob", "Chef");
-} catch (e) {
-    console.log(e.message);
+//console.log(Character.MAX_HEALTH);
+//const randomChar = Character.createRandomHealth("Alice");
+//console.log(randomChar.health);
+//try {
+//    new Adventurer("Bob", "Chef");
+//} catch (e) {
+//    console.log(e.message);
+//}
+//const randomAdventurer = Adventurer.createRandomRole("Charlie");
+//console.log(randomAdventurer.role);
+
+
+
+//#############################
+//Part 5: Gather your Party
+//Sometimes, you need many objects of a class that have one or more shared property values. A common approach for creating many similar objects of a single class, and keeping track of them is creating a “factory.”
+//Factories are classes that generate objects according to the factory’s instance properties.
+
+
+class AdventurerFactory {
+    constructor(role) {
+        this.role = role;
+        this.adventurers = [];
+    }
+    generate(name) {
+        const newAdventurer = new Adventurer(name, this.role);
+        this.adventurers.push(newAdventurer);
+    }
+    findByIndex(index) {
+        return this.adventurers[index];
+    }
+    findByName(name) {
+        return this.adventurers.find((a) => a.name === name);
+    }
 }
-const randomAdventurer = Adventurer.createRandomRole("Charlie");
-console.log(randomAdventurer.role);
 
-
-
+//const healers = new AdventurerFactory("Healer");
+//const robin = healers.generate("Robin");
