@@ -49,13 +49,24 @@ console.log(adventurer.roll(12));
 //console.log(adventurer.roll(5));
 
 
-//#########Part 2: Class Fantasy###########
+//#########Part 2, 3, 4, 5, 6, 7###########
+
 class Character {
+    static MAX_HEALTH = 100;
+
     constructor(name) {
         this.name = name;
         this.health = 100;
         this.inventory = [];
     }
+    //static method
+    static createRandomHealth(name) {
+        const character = new Character(name);
+        character.health = Math.floor(Math.random() * Character.MAX_HEALTH) + 1;
+        return character;
+    }
+
+
     roll(mod = 0) {
         const result = Math.floor(Math.random() * 20) + 1 + mod;
         console.log(`${this.name} rolled a ${result}.`);
@@ -76,16 +87,31 @@ console.log(robin);
 
 //#############Part 3: Class Features#######
 class Adventurer extends Character {
+    static ROLES = ['Fighter', 'Healer', 'Wizard', 'Wanderer', 'Rogue'];
+
     constructor(name, role) {
         //this.name = name;
         //this.role = role;
         super(name);
+
         this.role = role;
+        if (!Adventurer.ROLES.includes(role)) {
+            throw new Error(`Invalid role. Must be one of: ${Adventurer.ROLES.join(', ')}`);
+        }
+
         this.inventory.push('bedroll', '50 gold coins');
         this.skillPoints = 0;
         this.level = 1;
-
     }
+
+    //static method
+    static createRandomRole(name) {
+        //const randomRole = Adventure.ROLES[i];
+        const randomRole = Adventurer.ROLES[Math.floor(Math.random() * Adventurer.ROLES.length)];
+        return new Adventurer(name, randomRole);
+    }
+
+
     scout() {
         console.log(`${this.name} is scouting ahead...`);
         super.roll();
@@ -141,10 +167,20 @@ const frank = new Companion('Frank', 'Flea');
 frank.inventory = ['small hat', 'sunglasses'];
 leo.companion = frank;
 
-console.log(`############`)
 
-console.log(robin1);
-console.log(leo);
-console.log(frank);
+//console.log(robin1);
+//console.log(leo);
+//console.log(frank);
+console.log(Character.MAX_HEALTH);
+const randomChar = Character.createRandomHealth("Alice");
+console.log(randomChar.health);
+try {
+    new Adventurer("Bob", "Chef");
+} catch (e) {
+    console.log(e.message);
+}
+const randomAdventurer = Adventurer.createRandomRole("Charlie");
+console.log(randomAdventurer.role);
+
 
 
