@@ -81,7 +81,70 @@ class Adventurer extends Character {
         //this.role = role;
         super(name);
         this.role = role;
+        this.inventory.push('bedroll', '50 gold coins');
+        this.skillPoints = 0;
+        this.level = 1;
+
+    }
+    scout() {
+        console.log(`${this.name} is scouting ahead...`);
+        super.roll();
+    }
+    explore() {
+        console.log(`${this.name} is exploring the area... `)
+        const rollResult = this.roll(10);
+        this.skillPoints += rollResult;
+    }
+    checkLevelUp() {
+        if (this.skillPoints >= 100) {
+            level++;
+            this.skillPoints -= 100;
+            console.log(`${this.name} leveled up to level ${level}`);
+        }
     }
 }
+
+class Companion extends Character {
+    constructor(name, type) {
+        super(name);
+        this.type = type;
+        //this.health =100;
+        this.loyalty = 100;
+        //this.inventory = [];
+        this.companion = null;
+    }
+
+    ally(adventurer) {
+        console.log(`${this.name} the ${this.type} is being an ally to ${adventurer.name}!`);
+        const allyRoll = this.roll();
+        if (allyRoll > 10) {
+            console.log(`${this.name}'s companionship was helpful!`);
+            this.loyalty += 5;
+        } else {
+            console.log(`${this.name}'s companionship wasn't very effective...`);
+            this.loyalty -= 2;
+        }
+    }
+    checkLoyalty() {
+        `${this.name}'s loyalty is currently at ${this.loyalty} points.`
+    }
+
+}
+
+const robin1 = new Adventurer('robin1', 'Wanderer');
+robin1.inventory.push = ('sword', 'potion', 'artifact');
+
+const leo = new Companion('Leo', 'cat');
+robin1.companion = leo;
+
+const frank = new Companion('Frank', 'Flea');
+frank.inventory = ['small hat', 'sunglasses'];
+leo.companion = frank;
+
+console.log(`############`)
+
+console.log(robin1);
+console.log(leo);
+console.log(frank);
 
 
