@@ -46,3 +46,63 @@ class Adventurer extends Character {
         }
     }
 }
+
+// Define items
+const item1 = new Item('Healing Potion', 'potion', 'restores 5 health points');
+const item2 = new Item('Magic Wand', 'equipment', 'casting spells');
+
+// Create adventurers and give them inventories
+const adventurer1 = new Adventurer('Robin', 'Fighter');
+const adventurer2 = new Adventurer('Lia', 'Wizard');
+adventurer1.inventory = new Inventory();
+adventurer2.inventory = new Inventory();
+
+adventurer1.inventory.addItem(item1);
+adventurer2.inventory.addItem(item2);
+
+// Interaction example: Adventurers vs. Dragon and Monster
+function battle(adventurer, creature) {
+    console.log(`A battle begins: ${adventurer.name} vs. ${creature.name}`);
+
+    while (adventurer.health > 0 && creature.health > 0) {
+        // Adventurer attacks
+        const attackRoll = adventurer.roll();
+        console.log(`${adventurer.name} attacks with a roll of ${attackRoll}!`);
+        creature.health -= attackRoll; // Damage equal to roll
+        console.log(`${creature.name} takes ${attackRoll} damage. Health left: ${creature.health}`);
+
+        if (creature.health <= 0) {
+            console.log(`${creature.name} has been defeated!`);
+            break;
+        }
+
+        // Creature attacks
+        if (creature instanceof Dragon) {
+            creature.useFireBreath(adventurer);
+        } else if (creature instanceof Monster) {
+            creature.attack(adventurer);
+        }
+
+        if (adventurer.health <= 0) {
+            console.log(`${adventurer.name} has been defeated!`);
+            break;
+        }
+
+        // Allow adventurer to use an item (example: healing potion)
+        if (adventurer.inventory.includes(item1) && adventurer.health < 100) {
+            console.log(`${adventurer.name} uses a ${item1.name}.`);
+            adventurer.health += 5; // Restore health
+            adventurer.inventory.removeItem(item1); // Remove the used item
+            console.log(`${adventurer.name} restores 5 health points. Current health: ${adventurer.health}`);
+        }
+    }
+}
+
+// Example creatures
+const dragon = new Dragon('Fire Drake', 30);
+const monster = new Monster('Goblin', 20);
+
+// Start a battle
+battle(adventurer1, dragon);
+battle(adventurer2, monster);
+
