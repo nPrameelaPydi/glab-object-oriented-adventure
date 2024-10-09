@@ -193,7 +193,7 @@ class Companion extends Character {
 
 }
 
-const robin1 = new Adventurer('robin1', 'Wanderer');
+const robin1 = new Adventurer('robin', 'Wanderer');
 robin1.inventory.push = ('sword', 'potion', 'artifact');
 
 const leo = new Companion('Leo', 'cat');
@@ -245,3 +245,118 @@ class AdventurerFactory {
 
 //const healers = new AdventurerFactory("Healer");
 //const robin = healers.generate("Robin");
+
+class Dragon extends Character {
+    constructor(name) {
+        super(name);
+        this.fireBreatheDamage = 15;
+    }
+
+    useFireBreath(target) {
+        target.health -= this.fireBreatheDamage;
+    }
+}
+
+class Monster extends Character {
+    constructor(name) {
+        super(name);
+        this.attackDamage = 10;
+    }
+
+    attack(target) {
+        target.health -= this.attackDamage;
+    }
+}
+
+const adventurer1 = new Adventurer('Kai', 'Fighter');
+const companion1 = new Companion('Luna', 'Wanderer');
+adventurer1.companion = companion1;
+
+const adventurer2 = new Adventurer('Ila', 'Healer');
+const companion2 = new Companion('ema', 'wizard');
+adventurer2.companion = companion2;
+
+const creature1 = new Dragon("smug");
+const creature2 = new Monster("Goblin");
+
+class Item {
+    constructor(name, type, description) {
+        this.name = name;
+        this.type = type;
+        this.description = description;
+    }
+}
+
+class Inventory {
+    constructor() {
+        this.items = [];
+    }
+    addItem(item) {
+        this.items.push(item);
+    }
+    removeItem(item) {
+        if (this.items.includes(item)) {
+            let index = this.items.findIndex(i => i === item);
+            this.items.splice(index, 1);
+        }
+    }
+    //removeItem(item) {
+    //    //if (this.items.includes(item)) {
+    //    //    let this.index = items.findIndex(item);
+    //    //    this.items.splice(this.items[index], 1);
+    //    //}
+
+    //    //findIndex expects a function as an argument, not just the item itself
+    //    //splice expects the index as its first argument, not the element at that index
+    //    const index = this.items.indexOf(item);
+    //    if (index !== -1) {
+    //        this.items.splice(index, 1);
+    //    }
+    //    //console.log(this.items);
+    //}
+}
+
+const item1 = new Item('Healing Potion', 'potion', 'restores 5 health points')
+const item2 = new Item('Magic Wand', 'equipment', 'casting spells');
+adventurer1.inventory = new Inventory();
+adventurer2.inventory = new Inventory();
+adventurer1.inventory.addItem(item1);
+adventurer2.inventory.addItem(item2);
+
+console.log('');
+console.log(`##########Battle Game###########`)
+function battle(adventurer, creature) {
+    console.log(`Battle begins: ${adventurer.name} Vs. ${creature.name}`);
+
+    while (adventurer.health > 0 && creature.health > 0) {
+        //adventure attacks
+        const attackRoll = adventurer.roll();
+        creature.health -= attackRoll;
+        console.log(`${creature.name} takes ${attackRoll} points damage. Health left: ${creature.health}`);
+        if (creature.health <= 0) {
+            console.log(`${creature.name} has been defeated!!`);
+            break;
+        }
+
+        //creature attacks
+        if (creature instanceof Dragon) {
+            creature.useFireBreath(adventurer);
+        } else if (creature instanceof Monster) {
+            creature.attack(adventurer);
+        }
+        if (adventurer.health <= 0) {
+            console.log(`${adventurer.name} has been defeated!!`);
+            break;
+        }
+
+        //use inventory
+        if (adventurer.inventory.items.includes(item1) && adventurer.health < 100) {
+            adventurer.health += 5;
+            adventurer.inventory.removeItem(item1);
+            console.log(`${adventurer.name} restores 5 health points using a ${item1.name}. Current health: ${adventurer.health}.`)
+        }
+    }
+}
+
+battle(adventurer1, creature1);
+battle(adventurer2, creature2);
